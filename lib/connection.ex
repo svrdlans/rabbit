@@ -36,10 +36,12 @@ defmodule X3m.Rabbit.Connection do
         Process.link(conn.pid)
         {:ok, conn}
 
-      _e ->
+      e ->
         Logger.warn(fn ->
           "Connection unsuccessful. Will have #{attempt + 1}. retry in a second"
         end)
+
+        Logger.warn("Connection error: #{inspect(e)}")
 
         :timer.sleep(wait_before_retry)
         _connect_to_rabbit(bus_settings, attempt + 1, max_attempts, wait_before_retry)
